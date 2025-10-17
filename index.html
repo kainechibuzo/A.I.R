@@ -3,161 +3,201 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AIR james.co AI - Login</title>
+  <title>🌬️ AIR james.co AI | Login</title>
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      background: #b30000;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+    body {
+      background: #e60000;
       color: #000;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
     }
     .container {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 2.5rem;
       width: 360px;
+      background: #fff5f5;
+      border-radius: 16px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+      padding: 30px;
       text-align: center;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
     }
-    h1 { font-size: 1.6rem; margin-bottom: 0.5rem; font-weight: 700; }
-    p { font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem; }
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tab {
+      cursor: pointer;
+      padding: 8px 16px;
+      border-bottom: 2px solid transparent;
+    }
+    .tab.active {
+      border-color: #000;
+      font-weight: bold;
+    }
+    form {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+    form.active {
+      display: flex;
+    }
     input {
-      width: 100%; padding: 0.8rem; margin: 0.5rem 0;
-      border: none; border-radius: 8px;
-      background: rgba(255, 255, 255, 0.6);
-      font-size: 1rem; outline: none;
+      padding: 10px;
+      border: 1px solid #000;
+      border-radius: 6px;
+      font-size: 14px;
     }
-    .btn {
-      width: 100%; padding: 0.8rem; border: none;
-      border-radius: 8px; font-weight: 600; cursor: pointer;
-      margin-top: 0.5rem; transition: 0.2s ease;
+    button {
+      padding: 10px;
+      background: #000;
+      color: #e60000;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
     }
-    .btn-login { background: #000; color: #fff; }
-    .btn-login:hover { background: #222; }
+    button:hover {
+      opacity: 0.8;
+    }
     .remember {
-      display: flex; align-items: center;
-      justify-content: flex-start; font-size: 0.85rem; margin: 0.6rem 0;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      gap: 6px;
     }
-    .toggle {
-      background: none; border: none; color: #000;
-      font-weight: 600; cursor: pointer;
-      margin-top: 1rem; text-decoration: underline;
-    }
-    #logo {
-      width: 70px; height: 70px; margin: 0 auto 1rem;
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 50%; display: flex;
-      align-items: center; justify-content: center;
-      font-weight: bold; font-size: 1.2rem;
-    }
-    .hidden { display: none; }
-    footer { position: absolute; bottom: 10px; font-size: 0.8rem; opacity: 0.7; }
-    .alert {
-      background: rgba(255,255,255,0.6);
-      border-radius: 8px; padding: 0.6rem;
-      margin-bottom: 1rem; font-size: 0.85rem;
+    .message {
+      color: red;
+      font-size: 13px;
+      height: 16px;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="logo">LOGO</div>
-    <h1>AIR james.co AI</h1>
-    <p>Secure access to your monitoring dashboard</p>
+    <div class="logo">🌬️ AIR james.co AI</div>
+    <div class="subtitle">Secure access to your monitoring dashboard</div>
 
-    <div id="alertBox" class="alert hidden"></div>
+    <div class="tabs">
+      <div class="tab active" id="login-tab">Login</div>
+      <div class="tab" id="signup-tab">Sign Up</div>
+    </div>
 
-    <!-- LOGIN FORM -->
-    <form id="loginForm">
-      <input id="loginEmail" type="email" placeholder="Email address" required />
-      <input id="loginPassword" type="password" placeholder="Password" required />
-      <div class="remember">
-        <input type="checkbox" id="remember" />
-        <label for="remember">&nbsp;Remember me</label>
-      </div>
-      <button type="submit" class="btn btn-login">Login</button>
-      <button type="button" class="toggle" onclick="toggleForm()">Create an account</button>
+    <div class="message" id="message"></div>
+
+    <form id="login-form" class="active">
+      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <label class="remember">
+        <input type="checkbox" id="remember-me" /> Remember me
+      </label>
+      <button type="submit">Login</button>
     </form>
 
-    <!-- SIGNUP FORM -->
-    <form id="signupForm" class="hidden">
-      <input id="signupName" type="text" placeholder="Full name" required />
-      <input id="signupEmail" type="email" placeholder="Email address" required />
-      <input id="signupPassword" type="password" placeholder="Password" required />
-      <button type="submit" class="btn btn-login">Sign Up</button>
-      <button type="button" class="toggle" onclick="toggleForm()">Already have an account?</button>
+    <form id="signup-form">
+      <input type="text" id="signup-username" placeholder="Full Name" required />
+      <input type="email" id="signup-email" placeholder="Email" required />
+      <input type="password" id="signup-password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
     </form>
+  </div>
 
-    <script>
-      const loginForm = document.getElementById("loginForm");
-      const signupForm = document.getElementById("signupForm");
-      const alertBox = document.getElementById("alertBox");
-      const BASE_URL = "https://a-i-r-backend.onrender.com/api";
+  <script>
+    const loginTab = document.getElementById("login-tab");
+    const signupTab = document.getElementById("signup-tab");
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
+    const message = document.getElementById("message");
 
-      function toggleForm() {
-        loginForm.classList.toggle("hidden");
-        signupForm.classList.toggle("hidden");
-        hideAlert();
-      }
+    loginTab.onclick = () => {
+      loginTab.classList.add("active");
+      signupTab.classList.remove("active");
+      loginForm.classList.add("active");
+      signupForm.classList.remove("active");
+      message.textContent = "";
+    };
+    signupTab.onclick = () => {
+      signupTab.classList.add("active");
+      loginTab.classList.remove("active");
+      signupForm.classList.add("active");
+      loginForm.classList.remove("active");
+      message.textContent = "";
+    };
 
-      function showAlert(msg, type="error") {
-        alertBox.textContent = msg;
-        alertBox.style.color = type === "success" ? "green" : "red";
-        alertBox.classList.remove("hidden");
-      }
-
-      function hideAlert() { alertBox.classList.add("hidden"); }
-
-      loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        hideAlert();
-        const email = document.getElementById("loginEmail").value.trim();
-        const password = document.getElementById("loginPassword").value.trim();
-        try {
-          const res = await fetch(`${BASE_URL}/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-          });
-          const data = await res.json();
-          if (!res.ok) return showAlert(data.message || "Login failed");
+    // LOGIN
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      message.textContent = "Connecting...";
+      try {
+        const res = await fetch("https://a-i-r-backend.onrender.com/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: document.getElementById("login-email").value.trim(),
+            password: document.getElementById("login-password").value.trim(),
+          }),
+        });
+        const data = await res.json();
+        if (res.ok) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
-          localStorage.setItem("plan", data.plan);
-          showAlert("Login successful", "success");
-          setTimeout(() => window.location.href = "dashboard.html", 1000);
-        } catch (err) {
-          showAlert("Server error. Try again later.");
+          message.style.color = "green";
+          message.textContent = "Login successful. Redirecting...";
+          setTimeout(() => (window.location.href = "dashboard.html"), 1000);
+        } else {
+          message.textContent = data.message || "Invalid credentials.";
         }
-      });
+      } catch (err) {
+        message.textContent = "Server error. Try again later.";
+      }
+    });
 
-      signupForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        hideAlert();
-        const username = document.getElementById("signupName").value.trim();
-        const email = document.getElementById("signupEmail").value.trim();
-        const password = document.getElementById("signupPassword").value.trim();
-        try {
-          const res = await fetch(`${BASE_URL}/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password })
-          });
-          const data = await res.json();
-          if (!res.ok) return showAlert(data.message || "Signup failed");
-          showAlert("Signup successful. You can now log in.", "success");
-          setTimeout(toggleForm, 1000);
-        } catch (err) {
-          showAlert("Server error. Try again later.");
+    // SIGNUP
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      message.textContent = "Registering...";
+      try {
+        const res = await fetch("https://a-i-r-backend.onrender.com/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: document.getElementById("signup-username").value.trim(),
+            email: document.getElementById("signup-email").value.trim(),
+            password: document.getElementById("signup-password").value.trim(),
+          }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          message.style.color = "green";
+          message.textContent = "Signup successful. Please log in.";
+          signupTab.classList.remove("active");
+          loginTab.classList.add("active");
+          signupForm.classList.remove("active");
+          loginForm.classList.add("active");
+        } else {
+          message.textContent = data.message || "Signup failed.";
         }
-      });
-    </script>
-  </div>
-  <footer>© 2025 AIR james.co AI</footer>
+      } catch (err) {
+        message.textContent = "Server error. Try again later.";
+      }
+    });
+  </script>
 </body>
 </html>
