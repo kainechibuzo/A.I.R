@@ -3,133 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌬️ AIR Login</title>
+  <title>AIR Login/Register</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #0d1117;
-      color: #c9d1d9;
+      background: #1e1e2f;
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     .container {
-      background: #161b22;
-      padding: 2rem;
+      background: #2b2b3f;
+      padding: 40px;
       border-radius: 12px;
+      width: 350px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      width: 320px;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 1rem;
-      color: #58a6ff;
-    }
+    h2 { text-align: center; margin-bottom: 20px; }
     input {
       width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border: none;
+      padding: 12px;
+      margin: 8px 0;
       border-radius: 6px;
-      background: #0d1117;
-      color: #c9d1d9;
+      border: none;
     }
     button {
       width: 100%;
-      padding: 0.5rem;
-      margin-top: 1rem;
+      padding: 12px;
+      background: #00b894;
+      color: #fff;
       border: none;
       border-radius: 6px;
-      background: #238636;
-      color: white;
       cursor: pointer;
-      font-weight: bold;
+      margin-top: 10px;
+      font-size: 16px;
     }
-    button:hover {
-      background: #2ea043;
-    }
-    .switch {
-      margin-top: 1rem;
+    button:hover { background: #019875; }
+    .toggle {
       text-align: center;
+      margin-top: 12px;
       cursor: pointer;
-      color: #58a6ff;
-      font-size: 0.9rem;
+      color: #74b9ff;
     }
-    .error {
-      color: #ff4c4c;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
+    .error { color: #ff7675; margin-top: 10px; text-align: center; }
+    .success { color: #00b894; margin-top: 10px; text-align: center; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🌬️ AIR</h1>
-    <form id="authForm">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <select id="plan">
-        <option value="free">Free</option>
-        <option value="pro">Pro</option>
-      </select>
-      <button type="submit" id="submitBtn">Register</button>
-      <div class="switch" id="toggleForm">Already have an account? Login</div>
-      <div class="error" id="errorMsg"></div>
-    </form>
+    <h2 id="form-title">Login</h2>
+    <input type="text" id="username" placeholder="Username (Register only)" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <select id="plan">
+      <option value="free">Free</option>
+      <option value="pro">Pro</option>
+    </select>
+    <button id="submit-btn">Login</button>
+    <div class="toggle" id="toggle-form">Don't have an account? Register</div>
+    <div class="error" id="error-msg"></div>
+    <div class="success" id="success-msg"></div>
   </div>
 
   <script>
-    const form = document.getElementById('authForm');
-    const toggle = document.getElementById('toggleForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const errorMsg = document.getElementById('errorMsg');
-    let isLogin = false;
+    const usernameField = document.getElementById('username');
+    const emailField = document.getElementById('email');
+    const passwordField = document.getElementById('password');
+    const planField = document.getElementById('plan');
+    const submitBtn = document.getElementById('submit-btn');
+    const toggleForm = document.getElementById('toggle-form');
+    const formTitle = document.getElementById('form-title');
+    const errorMsg = document.getElementById('error-msg');
+    const successMsg = document.getElementById('success-msg');
 
-    toggle.addEventListener('click', () => {
+    let isLogin = true;
+    const backendURL = 'http://localhost:3000/api'; // change to deployed URL if needed
+
+    function toggle() {
       isLogin = !isLogin;
+      formTitle.textContent = isLogin ? 'Login' : 'Register';
       submitBtn.textContent = isLogin ? 'Login' : 'Register';
-      toggle.textContent = isLogin ? "Don't have an account? Register" : "Already have an account? Login";
-      document.getElementById('username').style.display = isLogin ? 'none' : 'block';
-      document.getElementById('plan').style.display = isLogin ? 'none' : 'block';
+      usernameField.style.display = isLogin ? 'none' : 'block';
+      planField.style.display = isLogin ? 'none' : 'block';
+      toggleForm.textContent = isLogin ? "Don't have an account? Register" : "Already have an account? Login";
       errorMsg.textContent = '';
-    });
+      successMsg.textContent = '';
+    }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    toggleForm.addEventListener('click', toggle);
+
+    submitBtn.addEventListener('click', async () => {
       errorMsg.textContent = '';
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const username = document.getElementById('username').value.trim();
-      const plan = document.getElementById('plan').value;
+      successMsg.textContent = '';
 
-      const endpoint = isLogin ? '/api/login' : '/api/register';
-      const payload = isLogin ? { email, password } : { username, email, password, plan };
+      const payload = isLogin
+        ? { email: emailField.value, password: passwordField.value }
+        : { username: usernameField.value, email: emailField.value, password: passwordField.value, plan: planField.value };
+
+      const endpoint = isLogin ? 'login' : 'register';
 
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(`${backendURL}/${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Something went wrong');
 
-        if (isLogin) {
+        const text = await res.text(); // always read as text first
+        let data;
+        try { data = JSON.parse(text); } catch { data = { message: text }; }
+
+        if (!res.ok) throw new Error(data.message || 'Server error');
+
+        successMsg.textContent = data.message || (isLogin ? 'Login successful' : 'Registered successfully');
+
+        if (isLogin && data.token) {
           localStorage.setItem('air_token', data.token);
-          localStorage.setItem('air_username', data.username);
-          localStorage.setItem('air_plan', data.plan);
-          alert(`Login successful! Welcome ${data.username}. Plan: ${data.plan}`);
+          localStorage.setItem('air_user', JSON.stringify({ username: data.username, plan: data.plan }));
+          // redirect to dashboard
           window.location.href = '/dashboard.html';
-        } else {
-          alert('Registration successful! You can now login.');
-          toggle.click(); // switch to login form
         }
+
       } catch (err) {
         errorMsg.textContent = err.message;
       }
     });
+
+    // Hide fields initially for login
+    toggle();
   </script>
 </body>
 </html>
