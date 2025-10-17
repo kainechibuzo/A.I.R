@@ -1,196 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌬️ AIR Login</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", sans-serif;
-}
-body {
-  height: 100vh;
-  background: linear-gradient(135deg, #d9f1ff, #f0f9ff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #0c2340;
-}
-.container {
-  background: #fff;
-  width: 100%;
-  max-width: 420px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  padding: 35px 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.title {
-  text-align: center;
-  font-size: 1.8rem;
-  color: #007bbd;
-  font-weight: 600;
-}
-input {
-  padding: 14px;
-  border: 1px solid #cde6ff;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-  transition: border 0.3s;
-}
-input:focus {
-  border-color: #007bbd;
-}
-.plans {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.plan {
-  flex: 1;
-  background: #e8f5ff;
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-  border: 2px solid transparent;
-  transition: 0.3s;
-  cursor: pointer;
-}
-.plan h3 {
-  font-size: 1rem;
-  color: #007bbd;
-  margin-bottom: 5px;
-}
-.plan p {
-  font-size: 0.85rem;
-  color: #0c2340;
-}
-.plan:hover {
-  transform: translateY(-3px);
-}
-.plan.selected {
-  border-color: #007bbd;
-  box-shadow: 0 0 10px rgba(0,123,189,0.2);
-}
-button {
-  padding: 14px;
-  border: none;
-  border-radius: 50px;
-  background: linear-gradient(90deg, #00bfff, #007bbd);
-  color: #fff;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  background: linear-gradient(90deg, #007bbd, #00a3e0);
-}
-#error {
-  color: #e74c3c;
-  text-align: center;
-  font-size: 0.9rem;
-  min-height: 18px;
-}
-@media (max-width: 480px) {
-  .container { width: 90%; padding: 25px; }
-  .plans { flex-direction: column; gap: 10px; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIR james.co AI - Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: #b30000;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    }
+    h1 { font-size: 1.6rem; margin-bottom: 0.5rem; font-weight: 700; }
+    p { font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem; }
+    input {
+      width: 100%; padding: 0.8rem; margin: 0.5rem 0;
+      border: none; border-radius: 8px;
+      background: rgba(255, 255, 255, 0.6);
+      font-size: 1rem; outline: none;
+    }
+    .btn {
+      width: 100%; padding: 0.8rem; border: none;
+      border-radius: 8px; font-weight: 600; cursor: pointer;
+      margin-top: 0.5rem; transition: 0.2s ease;
+    }
+    .btn-login { background: #000; color: #fff; }
+    .btn-login:hover { background: #222; }
+    .remember {
+      display: flex; align-items: center;
+      justify-content: flex-start; font-size: 0.85rem; margin: 0.6rem 0;
+    }
+    .toggle {
+      background: none; border: none; color: #000;
+      font-weight: 600; cursor: pointer;
+      margin-top: 1rem; text-decoration: underline;
+    }
+    #logo {
+      width: 70px; height: 70px; margin: 0 auto 1rem;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      font-weight: bold; font-size: 1.2rem;
+    }
+    .hidden { display: none; }
+    footer { position: absolute; bottom: 10px; font-size: 0.8rem; opacity: 0.7; }
+    .alert {
+      background: rgba(255,255,255,0.6);
+      border-radius: 8px; padding: 0.6rem;
+      margin-bottom: 1rem; font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="title">🌬️ AIR Monitor Login</div>
-  <input type="email" id="email" placeholder="Email address">
-  <input type="password" id="password" placeholder="Password">
+  <div class="container">
+    <div id="logo">LOGO</div>
+    <h1>AIR james.co AI</h1>
+    <p>Secure access to your monitoring dashboard</p>
 
-  <div class="plans">
-    <div class="plan" data-plan="free">
-      <h3>Free</h3><p>₦0 / month</p>
-    </div>
-    <div class="plan" data-plan="pro">
-      <h3>Pro</h3><p>₦5,000 / month</p>
-    </div>
-    <div class="plan" data-plan="admin">
-      <h3>Admin</h3><p>Custom</p>
-    </div>
+    <div id="alertBox" class="alert hidden"></div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm">
+      <input id="loginEmail" type="email" placeholder="Email address" required />
+      <input id="loginPassword" type="password" placeholder="Password" required />
+      <div class="remember">
+        <input type="checkbox" id="remember" />
+        <label for="remember">&nbsp;Remember me</label>
+      </div>
+      <button type="submit" class="btn btn-login">Login</button>
+      <button type="button" class="toggle" onclick="toggleForm()">Create an account</button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form id="signupForm" class="hidden">
+      <input id="signupName" type="text" placeholder="Full name" required />
+      <input id="signupEmail" type="email" placeholder="Email address" required />
+      <input id="signupPassword" type="password" placeholder="Password" required />
+      <button type="submit" class="btn btn-login">Sign Up</button>
+      <button type="button" class="toggle" onclick="toggleForm()">Already have an account?</button>
+    </form>
+
+    <script>
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
+      const alertBox = document.getElementById("alertBox");
+      const BASE_URL = "https://a-i-r-backend.onrender.com/api";
+
+      function toggleForm() {
+        loginForm.classList.toggle("hidden");
+        signupForm.classList.toggle("hidden");
+        hideAlert();
+      }
+
+      function showAlert(msg, type="error") {
+        alertBox.textContent = msg;
+        alertBox.style.color = type === "success" ? "green" : "red";
+        alertBox.classList.remove("hidden");
+      }
+
+      function hideAlert() { alertBox.classList.add("hidden"); }
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideAlert();
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value.trim();
+        try {
+          const res = await fetch(`${BASE_URL}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          });
+          const data = await res.json();
+          if (!res.ok) return showAlert(data.message || "Login failed");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("plan", data.plan);
+          showAlert("Login successful", "success");
+          setTimeout(() => window.location.href = "dashboard.html", 1000);
+        } catch (err) {
+          showAlert("Server error. Try again later.");
+        }
+      });
+
+      signupForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideAlert();
+        const username = document.getElementById("signupName").value.trim();
+        const email = document.getElementById("signupEmail").value.trim();
+        const password = document.getElementById("signupPassword").value.trim();
+        try {
+          const res = await fetch(`${BASE_URL}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password })
+          });
+          const data = await res.json();
+          if (!res.ok) return showAlert(data.message || "Signup failed");
+          showAlert("Signup successful. You can now log in.", "success");
+          setTimeout(toggleForm, 1000);
+        } catch (err) {
+          showAlert("Server error. Try again later.");
+        }
+      });
+    </script>
   </div>
-
-  <div id="error"></div>
-  <button id="loginBtn">Login</button>
-</div>
-
-<script>
-const plans = document.querySelectorAll(".plan");
-let selectedPlan = null;
-
-plans.forEach(p => {
-  p.addEventListener("click", () => {
-    plans.forEach(pl => pl.classList.remove("selected"));
-    p.classList.add("selected");
-    selectedPlan = p.dataset.plan;
-  });
-});
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const error = document.getElementById("error");
-  const btn = document.getElementById("loginBtn");
-
-  if (!email || !password) {
-    error.textContent = "Email and password required.";
-    return;
-  }
-  if (!selectedPlan) {
-    error.textContent = "Select a plan.";
-    return;
-  }
-
-  btn.textContent = "Logging in...";
-  btn.disabled = true;
-  error.textContent = "";
-
-  try {
-    const res = await fetch("https://a-i-r-backend.onrender.com/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      error.textContent = data.message || "Invalid credentials.";
-      btn.textContent = "Login";
-      btn.disabled = false;
-      return;
-    }
-
-    localStorage.setItem("air_token", data.token);
-    localStorage.setItem("air_user", data.username);
-    localStorage.setItem("air_plan", data.plan);
-
-    const plan = data.plan || selectedPlan;
-    if (plan === "free") window.location.href = "/free-dashboard.html";
-    else if (plan === "pro") window.location.href = "/pro-dashboard.html";
-    else if (plan === "admin") window.location.href = "/admin-dashboard.html";
-    else window.location.href = "/dashboard.html";
-
-  } catch {
-    error.textContent = "Server error. Try again later.";
-    btn.textContent = "Login";
-    btn.disabled = false;
-  }
-});
-</script>
+  <footer>© 2025 AIR james.co AI</footer>
 </body>
 </html>
-
