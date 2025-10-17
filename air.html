@@ -34,13 +34,18 @@
   <h1>🧠 AIR Dashboard</h1>
   <div id="info">Loading...</div>
   <button onclick="logout()">Logout</button>
+
   <script>
     const user = JSON.parse(localStorage.getItem('AIR_USER'));
     if (!user) window.location.href = '/';
 
+    // Point this to your Render backend
+    const API_BASE = "https://a-i-r-backend.onrender.com";
+
     async function loadStatus() {
       try {
-        const res = await fetch('/status');
+        const res = await fetch(`${API_BASE}/status`);
+        if (!res.ok) throw new Error("Bad response");
         const data = await res.json();
         document.getElementById('info').innerHTML =
           `<pre>${JSON.stringify(data, null, 2)}</pre>`;
@@ -58,3 +63,4 @@
   </script>
 </body>
 </html>
+
