@@ -17,41 +17,42 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
 
 .background-slogan {
   position: absolute;
-  font-size: 4rem;
+  font-size: clamp(2rem, 5vw, 4rem);
   color: rgba(0,123,189,0.05);
-  top: 30%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
+  text-align: center;
 }
 
 /* Card container */
 .login-container {
   position: relative;
-  width: 900px;
-  max-width: 95%;
+  width: 100%;
+  max-width: 420px;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  padding: 40px;
+  padding: 30px 25px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   z-index: 1;
+  box-sizing: border-box;
 }
 
 /* Email & password */
 .login-container input {
   width: 100%;
-  padding: 14px 20px;
-  border-radius: 12px;
+  padding: 14px 18px;
+  border-radius: 10px;
   border: 1px solid #c3e0ff;
   font-size: 1rem;
   outline: none;
@@ -65,31 +66,34 @@ body, html {
 /* Plan cards */
 .plan-cards {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .plan-card {
   flex: 1;
-  min-width: 250px;
+  min-width: 110px;
   background: #e6f4ff;
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 14px;
+  padding: 12px;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
   border: 2px solid transparent;
+  text-align: center;
 }
 .plan-card.selected {
   border-color: #007bbd;
-  box-shadow: 0 10px 20px rgba(0,123,189,0.2);
-  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,123,189,0.2);
+  transform: translateY(-4px);
 }
 .plan-card h3 {
-  margin-top: 0;
+  margin: 6px 0;
   color: #007bbd;
+  font-size: 1rem;
 }
 .plan-card p {
-  margin: 5px 0;
-  font-size: 0.95rem;
+  margin: 3px 0;
+  font-size: 0.85rem;
 }
 
 /* Login button */
@@ -113,6 +117,18 @@ body, html {
   color: #e74c3c;
   font-weight: 500;
   text-align: center;
+  min-height: 20px;
+  font-size: 0.9rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 500px) {
+  .login-container {
+    padding: 20px;
+    gap: 15px;
+  }
+  .plan-card h3 { font-size: 0.95rem; }
+  .plan-card p { font-size: 0.8rem; }
 }
 </style>
 </head>
@@ -126,25 +142,16 @@ body, html {
 
   <div class="plan-cards">
     <div class="plan-card" data-plan="free">
-      <h3>Free Plan</h3>
+      <h3>Free</h3>
       <p>₦0 / month</p>
-      <p>Basic AI assistance</p>
-      <p>Limited monitoring</p>
-      <p>Email alerts</p>
     </div>
     <div class="plan-card" data-plan="pro">
-      <h3>Pro Plan</h3>
+      <h3>Pro</h3>
       <p>₦5,000 / month</p>
-      <p>Premium AI responses</p>
-      <p>Full analytics dashboard</p>
-      <p>Priority email & webhook alerts</p>
     </div>
     <div class="plan-card" data-plan="admin">
-      <h3>Admin Plan</h3>
+      <h3>Admin</h3>
       <p>Custom pricing</p>
-      <p>Full dashboard control</p>
-      <p>User management</p>
-      <p>Unlimited monitoring & backup</p>
     </div>
   </div>
 
@@ -156,7 +163,6 @@ body, html {
 const planCards = document.querySelectorAll(".plan-card");
 let selectedPlan = null;
 
-// Highlight plan selection
 planCards.forEach(card => {
   card.addEventListener("click", () => {
     planCards.forEach(c => c.classList.remove("selected"));
@@ -183,48 +189,45 @@ loginBtn.addEventListener("click", async () => {
     return;
   }
 
+  loginBtn.textContent = "Logging in...";
+  loginBtn.disabled = true;
+
   try {
-    const res = await fetch("/api/login", {
+    const res = await fetch("https://a-i-r-backend.onrender.com/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
 
     const data = await res.json();
+
     if (!res.ok) {
       errorMsg.textContent = data.message || "Login failed";
+      loginBtn.textContent = "Login";
+      loginBtn.disabled = false;
       return;
     }
 
-    // Save user info locally
     localStorage.setItem("air_token", data.token);
     localStorage.setItem("air_username", data.username);
     localStorage.setItem("air_plan", data.plan);
 
-    // Redirect based on actual plan from backend (safe approach)
-    switch (data.plan) {
-      case "free":
-        window.location.href = "/free-dashboard.html";
-        break;
-      case "pro":
-        window.location.href = "/pro-dashboard.html";
-        break;
-      case "admin":
-        window.location.href = "/admin-dashboard.html";
-        break;
-      default:
-        window.location.href = "/dashboard.html";
-    }
+    // Redirect based on actual plan from backend
+    const plan = data.plan || selectedPlan;
+    if (plan === "free") window.location.href = "/free-dashboard.html";
+    else if (plan === "pro") window.location.href = "/pro-dashboard.html";
+    else if (plan === "admin") window.location.href = "/admin-dashboard.html";
+    else window.location.href = "/dashboard.html";
 
   } catch (err) {
     console.error(err);
-    errorMsg.textContent = "Server error, try again later.";
+    errorMsg.textContent = "Server error. Try again later.";
+    loginBtn.textContent = "Login";
+    loginBtn.disabled = false;
   }
 });
 </script>
 
-
 </body>
 </html>
-
 
